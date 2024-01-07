@@ -9,6 +9,7 @@ struct Student
     int rollno;
     int age;
     int phoneno;
+    double fees;
 };
 
 void add_stud(struct Student *ptr, int num)
@@ -21,6 +22,8 @@ void add_stud(struct Student *ptr, int num)
     scanf("%d", &(ptr + num)->age);
     printf("\nEnter Student Phone number  : ");
     scanf("%d", &(ptr + num)->phoneno);
+    printf("\nEnter the Fees : ");
+    scanf("%lf", &(ptr + num)->fees);
 }
 
 void display(struct Student *ptr, int num)
@@ -29,6 +32,15 @@ void display(struct Student *ptr, int num)
     printf("%d\t\t", (ptr + num)->rollno);
     printf("%d\t\t", (ptr + num)->age);
     printf("%d\t\t", (ptr + num)->phoneno);
+    printf("%0.2lf\t\t", (ptr + num)->fees);
+    if ((ptr + num)->fees > 0.010)
+    {
+        printf("NOT-PAID\t");
+    }
+    else
+    {
+        printf("PAID\t");
+    }
 }
 
 void delete(struct Student *ptr, int num)
@@ -39,7 +51,20 @@ void delete(struct Student *ptr, int num)
         strcpy(ptr->name, "Deleted");
         ptr->phoneno = 0;
         ptr->age = 0;
+        ptr->fees = 0;
         return;
+    }
+}
+
+void payFees(struct Student *ptr, int roll)
+{
+    if (ptr->rollno == roll)
+    {
+        double fees;
+        printf("\nHow Much You Need to pay : ");
+        scanf("%lf", &fees);
+        ptr->fees -= fees;
+        printf("\nThe Remaining Fees Pending : %0.2lf\n", ptr->fees);
     }
 }
 
@@ -54,7 +79,8 @@ int main()
         printf("1.Add Student Details\n");
         printf("2.Display all student Details\n");
         printf("3.Delete Student Detail\n");
-        printf("4.Exit\n\n");
+        printf("4.Fees Pay\n");
+        printf("5.Exit\n\n");
         printf("Enter your choice : ");
         scanf("%d", &choice);
 
@@ -68,7 +94,7 @@ int main()
 
             break;
         case 2:
-            printf("\nName\t\tRollno\t\tAge\t\tPhone number");
+            printf("\nName\t\tRollno\t\tAge\t\tPhone number\t\t\t\tFees\t\tFEES-STATUS");
             for (i = 0; i < count; i++)
             {
                 display(ptr, i);
@@ -84,8 +110,16 @@ int main()
             {
                 delete (ptr + i, get_roll);
             }
-
+            break;
+        case 4:
+            int get_r, i;
+            printf("Enter the Roll Number : ");
+            scanf("%d", &get_r);
+            for (i = 0; i < count; i++)
+            {
+                payFees(ptr, get_r);
+            }
             break;
         }
-    } while (!(choice == 0 || choice == 4));
+    } while (!(choice == 0 || choice == 5));
 }
